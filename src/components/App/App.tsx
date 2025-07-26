@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import Feedback from '../Feedback/Feedback';
-import Notification from '../Notifications/Notifications';
+import Notification from '../Notification/Notification';
 import styles from './App.module.css';
 
 
