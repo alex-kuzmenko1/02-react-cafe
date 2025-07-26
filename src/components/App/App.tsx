@@ -3,7 +3,7 @@ import Feedback from '../Feedback/Feedback';
 import Notification from '../Notifications/Notifications';
 import styles from './App.module.css';
 
-// Тип для состояния feedback
+
 type FeedbackState = {
   good: number;
   neutral: number;
@@ -20,7 +20,7 @@ const App = () => {
     localStorage.setItem('feedback', JSON.stringify(feedback));
   }, [feedback]);
 
-  // Явно типизируем параметр prev
+ 
   const updateFeedback = (type: keyof FeedbackState) => {
     setFeedback(prev => ({
       ...prev,
