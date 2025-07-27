@@ -1,13 +1,7 @@
-interface NotificationsProps {
-  message: string;
-}
+import css from './Notification.module.css';
 
-const Notifications = ({ message }: NotificationsProps) => {
-  return (
-    <div>
-      <p>{message}</p>
-    </div>
-  );
+const Notification = () => {
+  return <p className={css.message}>No feedback yet</p>;
 };
 
-export default Notifications;
+export default Notification;

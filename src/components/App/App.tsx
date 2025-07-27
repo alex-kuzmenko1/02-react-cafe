@@ -1,64 +1,50 @@
-import { useEffect, useState } from 'react';
-import Feedback from '../Feedback/Feedback';
+import { useState } from 'react';
+import css from './App.module.css';
+import { Votes, VoteType } from '../../types/votes';
+import CafeInfo from '../CafeInfo/CafeInfo';
+import VoteOptions from '../VoteOptions/VoteOptions';
+import VoteStats from '../VoteStats/VoteStats';
 import Notification from '../Notification/Notification';
-import styles from './App.module.css';
-
-
-type FeedbackState = {
-  good: number;
-  neutral: number;
-  bad: number;
-};
 
 const App = () => {
-  const [feedback, setFeedback] = useState<FeedbackState>(() => {
-    const saved = localStorage.getItem('feedback');
-    return saved ? JSON.parse(saved) : { good: 0, neutral: 0, bad: 0 };
+  const [votes, setVotes] = useState<Votes>({
+    good: 0,
+    neutral: 0,
+    bad: 0,
   });
 
-  useEffect(() => {
-    localStorage.setItem('feedback', JSON.stringify(feedback));
-  }, [feedback]);
-
- 
-  const updateFeedback = (type: keyof FeedbackState) => {
-    setFeedback(prev => ({
+  const handleVote = (type: VoteType) => {
+    setVotes(prev => ({
       ...prev,
       [type]: prev[type] + 1,
     }));
   };
 
-  const resetFeedback = () => {
-    setFeedback({ good: 0, neutral: 0, bad: 0 });
+  const resetVotes = () => {
+    setVotes({ good: 0, neutral: 0, bad: 0 });
   };
 
-  const total = feedback.good + feedback.neutral + feedback.bad;
-  const positivePercentage = total ? Math.round((feedback.good / total) * 100) : 0;
+  const totalVotes = votes.good + votes.neutral + votes.bad;
+  const positiveRate = totalVotes
+    ? Math.round((votes.good / totalVotes) * 100)
+    : 0;
 
   return (
-    <div className={styles.container}>
-      <h1>Sip Happens Café</h1>
-      <p>Please leave your feedback about our service by selecting one of the options below.</p>
-
-      <div className={styles.buttons}>
-        <button onClick={() => updateFeedback('good')} className={styles.button}>Good</button>
-        <button onClick={() => updateFeedback('neutral')} className={styles.button}>Neutral</button>
-        <button onClick={() => updateFeedback('bad')} className={styles.button}>Bad</button>
-        {total > 0 && (
-          <button onClick={resetFeedback} className={styles.resetButton}>Reset</button>
-        )}
-      </div>
-
-      {total > 0 ? (
-        <Feedback
-          good={feedback.good}
-          neutral={feedback.neutral}
-          bad={feedback.bad}
-          total={total}
-          positivePercentage={positivePercentage}
+    <div className={css.app}>
+      <CafeInfo />
+      <VoteOptions
+        onVote={handleVote}
+        onReset={resetVotes}
+        canReset={totalVotes > 0}
+      />
+      {totalVotes > 0 ? (
+        <VoteStats
+          votes={votes}
+          totalVotes={totalVotes}
+          positiveRate={positiveRate}
         />
       ) : (
-        <Notification message="No feedback yet" />
+        <Notification />
       )}
     </div>
   );
